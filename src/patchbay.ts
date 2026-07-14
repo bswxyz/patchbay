@@ -599,7 +599,16 @@ export function initPatchbay(
     ['ledger.out', 'main.in'],
   ];
 
+  /* staggered preset cables are queued — cancel the queue whenever the
+     user pulls everything or fires another preset, so no cable lands late */
+  let presetTimers: number[] = [];
+  const cancelPresetTimers = () => {
+    for (const id of presetTimers) window.clearTimeout(id);
+    presetTimers = [];
+  };
+
   const patchClassic = () => {
+    cancelPresetTimers();
     const missing = CLASSIC.filter(([f, t]) => !has(f, t));
     if (!missing.length) {
       setStatus('The classic voice is already patched. Add the LFO somewhere — live a little.');
@@ -609,11 +618,14 @@ export function initPatchbay(
       missing.forEach(([f, t]) => addConnection(f, t, true));
       refresh();
     } else {
-      missing.forEach(([f, t], i) => window.setTimeout(() => addConnection(f, t, true), i * 190));
+      missing.forEach(([f, t], i) => {
+        presetTimers.push(window.setTimeout(() => addConnection(f, t, true), i * 190));
+      });
     }
   };
 
   const surprise = () => {
+    cancelPresetTimers();
     const outs = [...JACKS.values()].filter((j) => j.dir === 'out');
     const ins = [...JACKS.values()].filter((j) => j.dir === 'in');
     const options: Array<[string, string]> = [];
@@ -628,6 +640,7 @@ export function initPatchbay(
   };
 
   const clearAll = () => {
+    cancelPresetTimers();
     while (connections.length) removeConnection(connections[0]);
     setStatus('All cables pulled. The rack is quiet again.');
     refresh();

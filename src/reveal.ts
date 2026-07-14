@@ -33,9 +33,12 @@ export function initCounters(reduce: boolean): void {
         const dec = Number(el.dataset.dec ?? 0);
         io.unobserve(el);
         if (reduce) {
+          /* the real value is already authored in the HTML — leave it */
           el.textContent = to.toFixed(dec);
           continue;
         }
+        /* zero only now, right before the count-up starts */
+        el.textContent = (0).toFixed(dec);
         const dur = 1300;
         const t0 = performance.now();
         const tick = (t: number) => {
