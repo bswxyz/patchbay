@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>
+  document.documentElement.classList.add('js');
+  try { var t = localStorage.getItem('patchbay-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<title>Patchbay — small-batch eurorack modules</title>
+<meta name="description" content="Patchbay builds eurorack modules in small batches: oscillators that drift like they mean it, filters that sing when pushed, and a random source we can't fully explain. Patch one on this page." />
+<meta name="theme-color" content="#131417" />
+<meta name="color-scheme" content="dark light" />
+<meta property="og:title" content="Patchbay — small-batch eurorack modules" />
+<meta property="og:description" content="Voltage in. Voice out. No presets. Drag a patch cable on the homepage and make the rack sing." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12.5' fill='%231b1d23' stroke='%23ffb020' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23ffb020'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<div class="film" aria-hidden="true"></div>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <a class="brand" href="./" aria-label="Patchbay home">
+    <svg class="brand-mark" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+      <circle class="bm-ring" cx="14" cy="14" r="10.5" />
+      <circle class="bm-pin" cx="14" cy="14" r="4" />
+    </svg>
+    <span class="brand-word">Patchbay</span>
+  </a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#modules">Modules</a>
+    <a href="#patch">Patch it</a>
+    <a href="#specs">Specs</a>
+    <a href="#systems">Systems</a>
+    <a href="./guide/">Guide</a>
+    <a class="nav-cta" href="#slots">Build slots</a>
+    <button id="themeBtn" class="theme-btn" type="button" aria-pressed="true" aria-label="Switch to light mode" title="Toggle light / dark">
+      <svg class="ico-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><g stroke-linecap="round"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></g></svg>
+      <svg class="ico-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ============ hero — the panel ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow mono">[ Eurorack modules · Portland, OR · batch nº 31 ]</p>
+        <h1 id="hero-title" class="hero-title">
+          <span class="line"><span>Voltage in.</span></span>
+          <span class="line"><span>Voice out.</span></span>
+          <span class="line"><span><em>No presets.</em></span></span>
+        </h1>
+        <p class="hero-sub">Patchbay builds eurorack modules in small batches — oscillators that
+          drift like they mean it, filters that sing when pushed, and a random source we can't
+          fully explain. Every patch you make is one of one.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#patch">Patch something</a>
+          <a class="btn btn-ghost" href="#modules">See the modules →</a>
+        </div>
+        <dl class="hero-facts">
+          <div><dt>In the line</dt><dd><span class="c-num" data-to="6">0</span> <span class="unit">modules</span></dd></div>
+          <div><dt>Rack width</dt><dd><span class="c-num" data-to="62">0</span> <span class="unit">HP</span></dd></div>
+          <div><dt>Warranty</dt><dd><span class="c-num" data-to="10">0</span> <span class="unit">years</span></dd></div>
+        </dl>
+      </div>
+
+      <figure class="scope reveal" aria-labelledby="scope-cap">
+        <div class="scope-face">
+          <div class="scope-head">
+            <span class="scope-title">PB-SCOPE · shop test rig</span>
+            <span class="scope-leds" aria-hidden="true">
+              <i class="led led--amber led--blink"></i>
+              <i class="led led--green"></i>
+            </span>
+          </div>
+          <div class="scope-screen">
+            <canvas id="scope" aria-hidden="true"></canvas>
+          </div>
+          <div class="scope-row" aria-hidden="true">
+            <div class="scope-knobs">
+              <span class="knob-ui" style="--turn:-40deg"></span>
+              <span class="knob-ui" style="--turn:25deg"></span>
+              <span class="knob-ui" style="--turn:80deg"></span>
+            </div>
+            <span class="scope-title mono">trig · int</span>
+          </div>
+        </div>
+        <figcaption id="scope-cap" class="scope-cap mono">
+          <span>CH 1 — saw into Bloom, resonance at noon</span>
+          <span>2 V/div · 5 ms</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ the modules — shop ============ -->
+  <section id="modules" class="modules">
+    <span class="wm" aria-hidden="true">±12V</span>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker mono reveal">[ The modules ]</p>
+        <h2 class="reveal">Six ways to bend a volt.</h2>
+        <p class="lede reveal">Small-batch, hand-calibrated, built to be patched hard. Every
+          faceplate prints its own current draw, because guessing is for oscillators.</p>
+      </div>
+
+      <div class="mod-grid">
+        <article class="mod reveal">
+          <div class="mod-art"><svg viewBox="0 0 200 112" aria-hidden="true" focusable="false">
+            <rect class="face" x="55" y="6" width="90" height="100" rx="5" />
+            <text class="lbl" x="100" y="18" text-anchor="middle">DRIFT</text>
+            <circle class="knob" cx="100" cy="44" r="17" /><line class="mark" x1="100" y1="31" x2="100" y2="37" transform="rotate(35 100 44)" />
+            <circle class="knob" cx="76" cy="74" r="8" /><line class="mark" x1="76" y1="68" x2="76" y2="71" transform="rotate(-50 76 74)" />
+            <circle class="knob" cx="124" cy="74" r="8" /><line class="mark" x1="124" y1="68" x2="124" y2="71" transform="rotate(20 124 74)" />
+            <circle class="jack" cx="76" cy="94" r="6.5" /><circle class="hole" cx="76" cy="94" r="2.8" />
+            <circle class="jack" cx="124" cy="94" r="6.5" /><circle class="hole" cx="124" cy="94" r="2.8" />
+            <circle class="led-a" cx="66" cy="24" r="2.6" />
+          </svg></div>
+          <div class="mod-info">
+            <div class="mod-top"><h3>Drift</h3><span class="mod-price">$329</span></div>
+            <p class="mod-spec">analog VCO · 12 HP · 70 mA · thru-zero FM</p>
+            <p class="mod-note">A triangle-core oscillator compensated just enough to stay in tune,
+              and just little enough to sound alive.</p>
+            <span class="mod-tag tag--ok">in stock</span>
+          </div>
+        </article>
+
+        <article class="mod reveal">
+          <div class="mod-art"><svg viewBox="0 0 200 112" aria-hidden="true" focusable="false">
+            <rect class="face" x="60" y="6" width="80" height="100" rx="5" />
+            <text class="lbl" x="100" y="18" text-anchor="middle">BLOOM</text>
+            <circle class="knob" cx="100" cy="46" r="19" /><line class="mark" x1="100" y1="31" x2="100" y2="38" transform="rotate(70 100 46)" />
+            <circle class="knob" cx="80" cy="76" r="7" /><line class="mark" x1="80" y1="71" x2="80" y2="74" transform="rotate(120 80 76)" />
+            <circle class="knob" cx="120" cy="76" r="7" /><line class="mark" x1="120" y1="71" x2="120" y2="74" transform="rotate(-30 120 76)" />
+            <circle class="jack" cx="80" cy="95" r="6.5" /><circle class="hole" cx="80" cy="95" r="2.8" />
+            <circle class="jack" cx="120" cy="95" r="6.5" /><circle class="hole" cx="120" cy="95" r="2.8" />
+            <circle class="led-a" cx="130" cy="24" r="2.6" />
+          </svg></div>
+          <div class="mod-info">
+            <div class="mod-top"><h3>Bloom</h3><span class="mod-price">$289</span></div>
+            <p class="mod-spec">4-pole lowpass VCF · 10 HP · 55 mA</p>
+            <p class="mod-note">A cascaded OTA filter that self-oscillates into a clean sine at
+              full resonance. Push it and it pushes back.</p>
+            <span class="mod-tag tag--ok">in stock</span>
+          </div>
+        </article>
+
+        <article class="mod reveal">
+          <div class="mod-art"><svg viewBox="0 0 200 112" aria-hidden="true" focusable="false">
+            <rect class="face" x="65" y="6" width="70" height="100" rx="5" />
+            <text class="lbl" x="100" y="18" text-anchor="middle">LEDGER</text>
+            <rect class="slider" x="78" y="26" width="5" height="42" rx="2.5" /><rect class="thumb" x="74.5" y="38" width="12" height="5" rx="2" />
+            <rect class="slider" x="97" y="26" width="5" height="42" rx="2.5" /><rect class="thumb" x="93.5" y="30" width="12" height="5" rx="2" />
+            <rect class="slider" x="116" y="26" width="5" height="42" rx="2.5" /><rect class="thumb" x="112.5" y="50" width="12" height="5" rx="2" />
+            <circle class="jack" cx="80" cy="82" r="6" /><circle class="hole" cx="80" cy="82" r="2.6" />
+            <circle class="jack" cx="100" cy="82" r="6" /><circle class="hole" cx="100" cy="82" r="2.6" />
+            <circle class="jack" cx="120" cy="82" r="6" /><circle class="hole" cx="120" cy="82" r="2.6" />
+            <circle class="jack" cx="100" cy="97" r="6" /><circle class="hole" cx="100" cy="97" r="2.6" />
+            <circle class="led-g" cx="126" cy="24" r="2.4" />
+          </svg></div>
+          <div class="mod-info">
+            <div class="mod-top"><h3>Ledger</h3><span class="mod-price">$219</span></div>
+            <p class="mod-spec">quad VCA / mixer · 8 HP · 48 mA · DC-coupled</p>
+            <p class="mod-note">Four VCAs that cascade into a mixer. The module nobody covets and
+              everybody needs.</p>
+            <span class="mod-tag tag--ok">in stock</span>
+          </div>
+        </article>
+
+        <article class="mod reveal">
+          <div class="mod-art"><svg viewBox="0 0 200 112" aria-hidden="true" focusable="false">
+            <rect class="face" x="70" y="6" width="60" height="100" rx="5" />
+            <text class="lbl" x="100" y="18" text-anchor="middle">STRAY</text>
+            <circle class="knob" cx="100" cy="40" r="13" /><line class="mark" x1="100" y1="30" x2="100" y2="35" transform="rotate(-15 100 40)" />
+            <circle class="led-a" cx="85" cy="62" r="2.6" /><circle class="led-g" cx="100" cy="62" r="2.6" /><circle class="led-a" cx="115" cy="62" r="2.6" />
+            <circle class="jack" cx="85" cy="80" r="6" /><circle class="hole" cx="85" cy="80" r="2.6" />
+            <circle class="jack" cx="115" cy="80" r="6" /><circle class="hole" cx="115" cy="80" r="2.6" />
+            <circle class="jack" cx="100" cy="96" r="6" /><circle class="hole" cx="100" cy="96" r="2.6" />
+          </svg></div>
+          <div class="mod-info">
+            <div class="mod-top"><h3>Stray</h3><span class="mod-price">$189</span></div>
+            <p class="mod-spec">random / S&amp;H · 6 HP · 32 mA · coin-flip gate</p>
+            <p class="mod-note">Sample-and-hold, slewed randomness, and a probability gate. The
+              patron module of happy accidents.</p>
+            <span class="mod-tag tag--soon">batch 32 · ships aug</span>
+          </div>
+        </article>
+
+        <article class="mod reveal">
+          <div class="mod-art"><svg viewBox="0 0 200 112" aria-hidden="true" focusable="false">
+            <rect class="face" x="60" y="6" width="80" height="100" rx="5" />
+            <text class="lbl" x="100" y="18" text-anchor="middle">TIDE</text>
+            <circle class="knob" cx="82" cy="44" r="11" /><line class="mark" x1="82" y1="36" x2="82" y2="40" transform="rotate(45 82 44)" />
+            <circle class="knob" cx="118" cy="44" r="11" /><line class="mark" x1="118" y1="36" x2="118" y2="40" transform="rotate(-70 118 44)" />
+            <path d="M74 68 Q84 56 94 68 T114 68 T134 68" fill="none" stroke="var(--led-green)" stroke-width="1.6" />
+            <circle class="jack" cx="78" cy="90" r="6" /><circle class="hole" cx="78" cy="90" r="2.6" />
+            <circle class="jack" cx="100" cy="90" r="6" /><circle class="hole" cx="100" cy="90" r="2.6" />
+            <circle class="jack" cx="122" cy="90" r="6" /><circle class="hole" cx="122" cy="90" r="2.6" />
+            <circle class="led-g" cx="130" cy="24" r="2.4" />
+          </svg></div>
+          <div class="mod-info">
+            <div class="mod-top"><h3>Tide</h3><span class="mod-price">$259</span></div>
+            <p class="mod-spec">function generator · 10 HP · 60 mA</p>
+            <p class="mod-note">Envelope, LFO, slew — one circuit, three jobs, with times from
+              snap to geological.</p>
+            <span class="mod-tag tag--ok">in stock</span>
+          </div>
+        </article>
+
+        <article class="mod reveal">
+          <div class="mod-art"><svg viewBox="0 0 200 112" aria-hidden="true" focusable="false">
+            <rect class="face" x="45" y="6" width="110" height="100" rx="5" />
+            <text class="lbl" x="100" y="18" text-anchor="middle">LOOM</text>
+            <circle class="led-a" cx="61" cy="30" r="2.6" /><circle class="led-a" cx="74" cy="30" r="2.6" /><circle class="led-g" cx="87" cy="30" r="2.6" /><circle class="led-a" cx="100" cy="30" r="2.6" /><circle class="led-a" cx="113" cy="30" r="2.6" /><circle class="led-a" cx="126" cy="30" r="2.6" /><circle class="led-g" cx="139" cy="30" r="2.6" />
+            <circle class="knob" cx="61" cy="52" r="8" /><line class="mark" x1="61" y1="46" x2="61" y2="49" transform="rotate(10 61 52)" />
+            <circle class="knob" cx="87" cy="52" r="8" /><line class="mark" x1="87" y1="46" x2="87" y2="49" transform="rotate(90 87 52)" />
+            <circle class="knob" cx="113" cy="52" r="8" /><line class="mark" x1="113" y1="46" x2="113" y2="49" transform="rotate(-45 113 52)" />
+            <circle class="knob" cx="139" cy="52" r="8" /><line class="mark" x1="139" y1="46" x2="139" y2="49" transform="rotate(140 139 52)" />
+            <circle class="jack" cx="61" cy="90" r="6" /><circle class="hole" cx="61" cy="90" r="2.6" />
+            <circle class="jack" cx="87" cy="90" r="6" /><circle class="hole" cx="87" cy="90" r="2.6" />
+            <circle class="jack" cx="113" cy="90" r="6" /><circle class="hole" cx="113" cy="90" r="2.6" />
+            <circle class="jack" cx="139" cy="90" r="6" /><circle class="hole" cx="139" cy="90" r="2.6" />
+          </svg></div>
+          <div class="mod-info">
+            <div class="mod-top"><h3>Loom</h3><span class="mod-price">$399</span></div>
+            <p class="mod-spec">8-step sequencer · 16 HP · 95 mA · per-step probability</p>
+            <p class="mod-note">Eight steps, a ratchet you'll overuse for a month, and probability
+              on everything. Open-source firmware.</p>
+            <span class="mod-tag tag--soon">preorder · sept</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ patch it — the interactive panel ============ -->
+  <section id="patch" class="patch">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker mono reveal">[ Patch it ]</p>
+        <h2 class="reveal">Wire it wrong. That's the right way.</h2>
+        <p class="lede reveal">Drag a cable from any <strong>OUT</strong> to any <strong>IN</strong>.
+          Complete the classic voice — VCO&nbsp;→&nbsp;VCF&nbsp;→&nbsp;VCA&nbsp;→&nbsp;out — and the
+          rack sings. Or ignore the manual and find something better; the LFO goes anywhere.</p>
+      </div>
+
+      <div class="patch-toolbar reveal">
+        <button id="soundBtn" class="chip-btn" type="button" aria-pressed="false">Sound: off</button>
+        <span class="sound-note">starts silent · your neighbours thank you</span>
+        <span class="spacer"></span>
+        <button id="presetVoice" class="chip-btn" type="button">Patch the classic voice</button>
+        <button id="presetSurprise" class="chip-btn" type="button">Surprise me</button>
+        <button id="clearBtn" class="chip-btn" type="button">Pull all cables</button>
+      </div>
+
+      <div class="patch-scroll reveal" role="region" aria-label="Patch panel, scrollable" tabindex="0">
+        <div class="patch-host" id="patchbay"><noscript>
+          <p class="noscript-note">The patch panel needs JavaScript to draw its cables. The short
+            version: Drift's saw goes into Bloom, Bloom into Ledger, Ledger into the output — and
+            Wobble, the LFO, improves almost anything you point it at.</p>
+        </noscript></div>
+      </div>
+
+      <p class="patch-status mono" id="patchStatus" aria-live="polite">Rack is quiet. Grab a cable — start at a jack marked OUT.</p>
+      <p class="patch-hints">Keyboard: <kbd>Tab</kbd> to a jack, <kbd>Enter</kbd> picks up a cable,
+        <kbd>Enter</kbd> on another jack plugs it in, <kbd>Esc</kbd> drops it. <kbd>Enter</kbd> on a
+        patched input pulls its cable. The preset buttons above do the wiring for you.</p>
+    </div>
+  </section>
+
+  <!-- ============ specs ============ -->
+  <section id="specs" class="specs">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker mono reveal">[ Specs ]</p>
+        <h2 class="reveal">Numbers for the rack planners.</h2>
+        <p class="lede reveal">Shared across the whole line, so your power math stays boring —
+          the way power math should be.</p>
+      </div>
+      <table class="spec-table reveal">
+        <caption class="sr-only">Specifications shared by all Patchbay modules</caption>
+        <tbody>
+          <tr><th scope="row">Format</th><td><strong>3U Eurorack</strong> — Doepfer A-100 mechanical &amp; electrical spec</td></tr>
+          <tr><th scope="row">Panels</th><td>2&nbsp;mm anodised aluminium, silver; legends printed, not stickered</td></tr>
+          <tr><th scope="row">Power</th><td>±12&nbsp;V via shrouded 10-pin header — draw printed on every faceplate</td></tr>
+          <tr><th scope="row">Depth</th><td><strong>≤ 28 mm</strong> behind the panel, skiff-safe, all of them</td></tr>
+          <tr><th scope="row">Jacks</th><td>Thonkiconn 3.5&nbsp;mm, nuts torqued by hand — spares in every box</td></tr>
+          <tr><th scope="row">Calibration</th><td>every VCO burned in for 48&nbsp;h and tuned twice, a day apart</td></tr>
+          <tr><th scope="row">CV range</th><td>audio ±5&nbsp;V · CV 0–8&nbsp;V · 1&nbsp;V/oct tracking within 0.1% over 8 octaves</td></tr>
+          <tr><th scope="row">Firmware</th><td>Loom and Tide are open source — flash over USB, or don't, they ship happy</td></tr>
+          <tr><th scope="row">Warranty</th><td><strong>10 years</strong>, including the ones you patched wrong. Especially those.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ systems — pricing ============ -->
+  <section id="systems" class="systems">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker mono reveal">[ Systems ]</p>
+        <h2 class="reveal">Start small. It won't help.</h2>
+        <p class="lede reveal">Three ways in. Every system ships pre-calibrated, cabled, and in a
+          case we'd gig ourselves. Fair warning: “enough HP” is not a real number.</p>
+      </div>
+
+      <div class="sys-grid">
+        <article class="sys reveal">
+          <h3>First Voice</h3>
+          <p class="sys-price mono">$940</p>
+          <p class="sys-sub">One complete subtractive voice. The classic patch, in hardware.</p>
+          <ul class="sys-list">
+            <li>Drift, Bloom &amp; Ledger</li>
+            <li>42 HP powered case, near cost</li>
+            <li>10 cables + a cable we tie-dyed badly</li>
+            <li>The patch card for the classic voice</li>
+          </ul>
+          <a class="btn btn-ghost btn-block" href="#slots">Hold a slot</a>
+        </article>
+
+        <article class="sys sys--star reveal">
+          <p class="sys-flag">most patched</p>
+          <h3>Weekender</h3>
+          <p class="sys-price mono">$1,590</p>
+          <p class="sys-sub">The voice plus movement — modulation, chance, and room to get lost.</p>
+          <ul class="sys-list">
+            <li>Everything in First Voice</li>
+            <li>+ Stray &amp; Tide</li>
+            <li>84 HP case with room to grow (it will)</li>
+            <li>20 cables, cable hanger, patch journal</li>
+          </ul>
+          <a class="btn btn-primary btn-block" href="#slots">Hold a slot</a>
+        </article>
+
+        <article class="sys reveal">
+          <h3>The Wall</h3>
+          <p class="sys-price mono">$2,780</p>
+          <p class="sys-sub">Every module we make, twice the rack you need today. You'll fill it.</p>
+          <ul class="sys-list">
+            <li>All six modules, matched batch</li>
+            <li>2 × 104 HP powered case</li>
+            <li>40 cables in four lengths</li>
+            <li>First refusal on every new batch</li>
+          </ul>
+          <a class="btn btn-ghost btn-block" href="#slots">Hold a slot</a>
+        </article>
+      </div>
+      <p class="sys-note">Every module ships solo too — systems just skip most of the case markup.
+        Prices in USD; power cables and existential scope creep included.</p>
+
+      <div class="slot-box reveal" id="slots" aria-live="polite">
+        <div class="slot-copy">
+          <p class="kicker mono">[ Build slots ]</p>
+          <h3>We build forty a month.</h3>
+          <p>Small batches keep the calibration honest. Leave an email, pick a system, and we'll
+            write back — a person, not a drip campaign — when your slot opens.</p>
+        </div>
+        <form id="slotForm" novalidate>
+          <div class="field">
+            <label for="sEmail">Email</label>
+            <input id="sEmail" name="email" type="email" required autocomplete="email" placeholder="you@example.com" />
+          </div>
+          <div class="field">
+            <label for="sSystem">System</label>
+            <select id="sSystem" name="system">
+              <option value="first-voice">First Voice — $940</option>
+              <option value="weekender" selected>Weekender — $1,590</option>
+              <option value="the-wall">The Wall — $2,780</option>
+              <option value="modules">Just modules, I have a case</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Hold my slot</button>
+          <p class="slot-fine" id="slotFine">Demo form — nothing is sent. See the README.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-top">
+    <span class="foot-brand">Patchbay</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="#modules">Modules</a><a href="#patch">Patch it</a><a href="#specs">Specs</a><a href="#systems">Systems</a><a href="./guide/">Guide</a>
+    </nav>
+  </div>
+  <div class="wrap foot-bottom mono">
+    <span>© 2026 Patchbay — a design-showcase concept, not a real maker. Modules, prices and batch numbers are fiction.</span>
+    <span>Designed &amp; built by Parable · <a href="./guide/">How this was built →</a></span>
+  </div>
+</footer>
+
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>
